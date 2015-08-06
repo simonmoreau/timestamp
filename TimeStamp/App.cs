@@ -6,6 +6,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System.IO;
 #endregion
 
 namespace TimeStamp
@@ -19,6 +20,9 @@ namespace TimeStamp
                 Assembly exe = Assembly.GetExecutingAssembly();
                 string dllpath = exe.Location;
 
+                string helpPath = Path.Combine(Path.GetDirectoryName(dllpath), "TimeStampHelp.html");
+                ContextualHelp help = new ContextualHelp(ContextualHelpType.ChmFile, helpPath);
+
                 //Create the panel for the TimeStamp
                 RibbonPanel TimeStampPanel = a.CreateRibbonPanel("TimeStamp");
 
@@ -27,6 +31,7 @@ namespace TimeStamp
                 timeStampButton.ToolTip = "Add Date and File information on every Revit model object.";
                 timeStampButton.LargeImage = Tools.GetEmbeddedImage("TimeStamp.Resources.TimeStamp_Large.png");
                 timeStampButton.Image = Tools.GetEmbeddedImage("TimeStamp.Resources.TimeStamp_Small.png");
+                timeStampButton.SetContextualHelp(help);
                 TimeStampPanel.AddItem(timeStampButton);
 
                 return Result.Succeeded;

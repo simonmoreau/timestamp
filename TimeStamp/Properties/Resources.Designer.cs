@@ -68,7 +68,7 @@ namespace TimeStamp.Properties {
         ///*GROUP	ID	NAME
         ///GROUP	1	FileProperties
         ///*PARAM	GUID	NAME	DATATYPE	DATACATEGORY	GROUP	VISIBLE	DESCRIPTION	USERMODIFIABLE
-        ///PARAM	713a8e1c-aaad-4e19-8c2e-eefb04fffee7	BIM42_Trade	TEXT		1	1	Model Trade	1
+        ///PARAM	713a8e1c-aaad-4e19-8c2e-eefb04fffee7	BIM42_Discipline	TEXT		1	1	Model Trade	1
         ///PARAM	d2c2ed57-2d0e-42ac-b147-a35872add6e6	BIM42_Date	TEXT		1	1	Model Date	1
         ///PARAM	fcd1c8b1-c342-4708-abc3-081660d046ae	BIM42_Version	TEXT		1	1	Model Version	1
         ///PARAM	c9138cec-136a-4e71-9524-df6e300078ee	BIM [rest of string was truncated]&quot;;.

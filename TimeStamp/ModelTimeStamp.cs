@@ -19,19 +19,34 @@ namespace TimeStamp
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIDocument UIdoc = commandData.Application.ActiveUIDocument;
+            Application app = commandData.Application.Application;
             Document doc = UIdoc.Document;
 
             using (Transaction tx = new Transaction(doc))
             {
                 try
                 {
-                    // Add Your Code Here
-                    //Date various file properties (Date, indice, file name, lot)
-                    PrepareModelInterface properties = new PrepareModelInterface(doc);
+                    //Create a list of category
+                    CategorySet categories = CreateCategoryList(doc, app);
+
+                    //Retrive the coresponding list of elements
+                    IList<Element> ElementsList = GetElementList(doc, categories);
+
+                    //Load the interface
+                    PrepareModelInterface properties = new PrepareModelInterface(doc, ElementsList);
 
                     if (properties.ShowDialog() == true)
                     {
-                        ApplyValuesOnElements(doc, commandData.Application.Application, tx, properties);
+                        tx.Start("Model TimeStamp");
+
+                        //Create Shared parameters if necessary
+                        AddSharedParameters(app, doc, categories);
+
+                        //Apply these values to every elements
+                        ApplyValuesOnElements(properties);
+
+                        tx.Commit();
+
                         // Return Success
                         return Result.Succeeded;
                     }
@@ -74,43 +89,36 @@ namespace TimeStamp
             }
         }
 
-        private void ApplyValuesOnElements(Document doc, Application app, Transaction tx, PrepareModelInterface properties)
+        private IList<Element> GetElementList(Document doc, CategorySet categories)
         {
-            tx.Start("Apply file properties on elements");
-
-            //Create a list of category
-            CategorySet myCategories = CreateCategoryList(doc, app);
-
-            //Load Shared parameters
-            AddSharedParameters(app, doc, myCategories);
-
             //Retrive all model elements
             FilteredElementCollector collector = new FilteredElementCollector(doc);
             IList<ElementFilter> categoryFilters = new List<ElementFilter>();
 
-            foreach (Category category in myCategories)
+            foreach (Category category in categories)
             {
                 categoryFilters.Add(new ElementCategoryFilter(category.Id));
             }
 
             ElementFilter filter = new LogicalOrFilter(categoryFilters);
 
-            IList<Element> elementList = collector.WherePasses(filter).WhereElementIsNotElementType().ToElements();
+            return collector.WherePasses(filter).WhereElementIsNotElementType().ToElements();
 
+        }
+
+        private void ApplyValuesOnElements(PrepareModelInterface properties)
+        {
             //Add the value to all element
-            if (elementList.Count > 0)
+            if (properties.ElementList.Count > 0)
             {
-                foreach (Element e in elementList)
+                foreach (Element e in properties.ElementList)
                 {
                     WriteOnParam("BIM42_Date", e, properties.Modeldate);
                     WriteOnParam("BIM42_Version", e, properties.ModelIndice);
                     WriteOnParam("BIM42_File", e, properties.ModelName);
-                    WriteOnParam("BIM42_Trade", e, properties.ModelLot);
+                    WriteOnParam("BIM42_Discipline", e, properties.ModelLot);
                 }
             }
-
-            tx.Commit();
-
         }
 
         private void WriteOnParam(string paramId, Element e, string value)
@@ -130,7 +138,7 @@ namespace TimeStamp
         {
             //Save the previous shared param file path
             string previousSharedParam = app.SharedParametersFilename;
-            
+
             //Extract shared param to a txt file
             string tempPath = System.IO.Path.GetTempPath();
             string SPPath = Path.Combine(tempPath, "FileProperties.txt");

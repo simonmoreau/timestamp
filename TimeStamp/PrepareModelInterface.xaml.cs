@@ -22,18 +22,31 @@ namespace TimeStamp
     /// </summary>
     public partial class PrepareModelInterface : Window
     {
-        public PrepareModelInterface(Document _doc)
+        public PrepareModelInterface(Document _doc, IList<Element> elements)
         {
             InitializeComponent();
 
-            _modelName = Path.GetFileName(_doc.PathName);
-            modelName.Text = _modelName;
-            _modelIndice = "0";
-            modelIndice.Text = _modelIndice;
-            _modelLot = "Lot";
-            modelLot.Text = _modelLot;
-            _modelDate = DateTime.Now.ToShortDateString();
+            _elementList = elements;
+
+            //Check for initial values
+            Element element = elements.FirstOrDefault();
+
+            _modelDate = GetValueOrDefault(element,"BIM42_Date",DateTime.Now.ToShortDateString());
             modelDate.Text = _modelDate;
+
+            _modelName = GetValueOrDefault(element,"BIM42_File",Path.GetFileName(_doc.PathName));
+            modelName.Text = _modelName;
+
+            _modelIndice = GetValueOrDefault(element,"BIM42_Version","0");
+            modelIndice.Text = _modelIndice;
+
+            _modelLot = GetValueOrDefault(element, "BIM42_Discipline", "Architecture");
+            modelLot.Text = _modelLot;
+        }
+        private IList<Element> _elementList;
+        public IList<Element> ElementList
+        {
+            get { return _elementList; }
         }
 
         private string _modelName;
@@ -58,6 +71,19 @@ namespace TimeStamp
         public string Modeldate
         {
             get { return _modelDate; }
+        }
+
+        private string GetValueOrDefault(Element element, string parameterName, string defaultValue)
+        {
+            if (element.GetParameters(parameterName).Count != 0)
+            {
+                Parameter param = element.GetParameters(parameterName).FirstOrDefault();
+                return param.AsString();
+            }
+            else
+            {
+                return defaultValue;
+            }
         }
 
         private void Ok_Button_Click(object sender, RoutedEventArgs e)
