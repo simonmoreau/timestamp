@@ -1,20 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
-  <AddIn Type="Command">
-    <Text>Command TimeStamp</Text>
-    <Description>Some description for TimeStamp</Description>
-    <Assembly>TimeStamp.dll</Assembly>
-    <FullClassName>TimeStamp.Command</FullClassName>
-    <ClientId>67279af7-f5cb-4a37-b9dc-287c9cebd164</ClientId>
-    <VendorId>TBC_</VendorId>
-    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
-  </AddIn>
   <AddIn Type="Application">
-    <Name>Application TimeStamp</Name>
+    <Name>Time Stamper</Name>
     <Assembly>TimeStamp.dll</Assembly>
     <FullClassName>TimeStamp.App</FullClassName>
-    <ClientId>d6770725-efe3-49fd-8835-b18a6e3692cf</ClientId>
-    <VendorId>TBC_</VendorId>
-    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+    <ClientId>1c629330-3b31-46ff-b510-d0d2639e3a1f</ClientId>
+    <VendorId>BIM42</VendorId>
+    <VendorDescription>BIM 42, http://www.bim42.com</VendorDescription>
   </AddIn>
 </RevitAddIns>

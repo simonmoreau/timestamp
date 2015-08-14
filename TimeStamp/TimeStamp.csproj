@@ -75,6 +75,7 @@
     <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="Resources\TimeStampHelp_Files\ClientResources" />
     <None Include="TimeStamp.addin" />
   </ItemGroup>

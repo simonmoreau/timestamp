@@ -24,7 +24,7 @@ namespace TimeStamp
                 ContextualHelp help = new ContextualHelp(ContextualHelpType.ChmFile, helpPath);
 
                 //Create the panel for the TimeStamp
-                RibbonPanel TimeStampPanel = a.CreateRibbonPanel("TimeStamp");
+                RibbonPanel TimeStampPanel = a.CreateRibbonPanel("Time Stamper");
 
                 //Add FSL Button
                 PushButtonData timeStampButton = new PushButtonData("TimeStampButton", "Stamp\r\nModel", dllpath, "TimeStamp.ModelTimeStamp");
