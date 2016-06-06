@@ -43,7 +43,7 @@ namespace TimeStamp
                         AddSharedParameters(app, doc, categories);
 
                         //Apply these values to every elements
-                        ApplyValuesOnElements(properties);
+                        ApplyValuesOnElements(properties,doc);
 
                         tx.Commit();
 
@@ -102,21 +102,67 @@ namespace TimeStamp
 
             ElementFilter filter = new LogicalOrFilter(categoryFilters);
 
+
+
             return collector.WherePasses(filter).WhereElementIsNotElementType().ToElements();
 
         }
 
-        private void ApplyValuesOnElements(PrepareModelInterface properties)
+        private List<CustomGroupType> RemoveAllGroup(Document doc)
         {
+            //Retrive all group types
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            List<GroupType> groupTypes = collector.OfClass(typeof(GroupType)).Cast<GroupType>().ToList();
+            List<CustomGroupType> customGroupTypes = new List<CustomGroupType>();
+
+            foreach (GroupType groupType in groupTypes)
+            {
+                if (!groupType.Groups.IsEmpty)
+                {
+                    customGroupTypes.Add(new CustomGroupType(groupType));
+                }
+                
+            }
+
+            return customGroupTypes;
+        }
+
+        private void ApplyValuesOnElements(PrepareModelInterface properties, Document doc)
+        {
+            //Remove all groups
+            List<CustomGroupType> customGroupTypes = RemoveAllGroup(doc);
+
             //Add the value to all element
             if (properties.ElementList.Count > 0)
             {
                 foreach (Element e in properties.ElementList)
                 {
-                    WriteOnParam("BIM42_Date", e, properties.Modeldate);
-                    WriteOnParam("BIM42_Version", e, properties.ModelIndice);
-                    WriteOnParam("BIM42_File", e, properties.ModelName);
-                    WriteOnParam("BIM42_Discipline", e, properties.ModelLot);
+                        WriteOnParam("BIM42_Date", e, properties.Modeldate);
+                        WriteOnParam("BIM42_Version", e, properties.ModelIndice);
+                        WriteOnParam("BIM42_File", e, properties.ModelName);
+                        WriteOnParam("BIM42_Discipline", e, properties.ModelLot);
+                }
+            }
+
+            //Recreate groups
+            foreach (CustomGroupType customGroupType in customGroupTypes)
+            {
+                //Delete the previous group type
+                doc.Delete(customGroupType.GroupType.Id);
+
+                //Create a new group with the same name
+                Group grpNew = doc.Create.NewGroup(customGroupType.ElementIds.FirstOrDefault());
+                grpNew.GroupType.Name = customGroupType.Name;
+
+                //Create all other group, and apply the newly created group
+                List<List<ElementId>> tempIdList = customGroupType.ElementIds;
+                tempIdList.RemoveAt(0);
+                foreach (List<ElementId> elementIds in tempIdList)
+                {
+                    Group grpTemps = doc.Create.NewGroup(elementIds);
+                    GroupType tempType = grpTemps.GroupType;
+                    grpTemps.ChangeTypeId(grpNew.GroupType.Id);
+                    doc.Delete(tempType.Id);
                 }
             }
         }
@@ -196,6 +242,25 @@ namespace TimeStamp
         }
 
 
+    }
+
+    class CustomGroupType
+    {
+        public GroupType GroupType { get; set; }
+        public string Name { get; set; }
+        public List<List<ElementId>> ElementIds { get; set; }
+
+        public CustomGroupType(GroupType groupType)
+        {
+            Name = groupType.Name;
+            GroupType = groupType;
+            ElementIds = new List<List<ElementId>>();
+
+            foreach (Group group in groupType.Groups)
+            {
+                ElementIds.Add(group.UngroupMembers().ToList());
+            }
+        }
     }
 }
 
