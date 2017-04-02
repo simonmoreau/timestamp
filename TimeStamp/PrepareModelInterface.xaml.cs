@@ -29,24 +29,24 @@ namespace TimeStamp
             _elementList = elements;
 
             //Check for initial values
-            Element element = elements.FirstOrDefault();
-
-            _modelDate = GetValueOrDefault(element,"BIM42_Date",DateTime.Now.ToShortDateString());
+            
+            _modelDate = GetValueOrDefault("BIM42_Date",DateTime.Now.ToShortDateString());
             modelDate.Text = _modelDate;
 
-            _modelName = GetValueOrDefault(element,"BIM42_File",Path.GetFileName(_doc.PathName));
+            _modelName = GetValueOrDefault("BIM42_File",Path.GetFileName(_doc.PathName));
             modelName.Text = _modelName;
 
-            _modelIndice = GetValueOrDefault(element,"BIM42_Version","0");
+            _modelIndice = GetValueOrDefault("BIM42_Version","0");
             modelIndice.Text = _modelIndice;
 
-            _modelLot = GetValueOrDefault(element, "BIM42_Discipline", "Architecture");
+            _modelLot = GetValueOrDefault("BIM42_Discipline", "Architecture");
             modelLot.Text = _modelLot;
         }
         private IList<Element> _elementList;
         public IList<Element> ElementList
         {
             get { return _elementList; }
+            set { _elementList = value; }
         }
 
         private string _modelName;
@@ -73,17 +73,43 @@ namespace TimeStamp
             get { return _modelDate; }
         }
 
-        private string GetValueOrDefault(Element element, string parameterName, string defaultValue)
+        private bool _overrideValues;
+        public bool OverrideValues
         {
-            if (element.GetParameters(parameterName).Count != 0)
+            get { return _overrideValues; }
+        }
+
+        private bool _inView;
+        public bool InView
+        {
+            get { return _inView; }
+        }
+
+        private string GetValueOrDefault(string parameterName, string defaultValue)
+        {
+            //Check if the param exist
+            Element firstOne = _elementList.FirstOrDefault();
+            if (firstOne.GetParameters(parameterName).Count != 0)
             {
-                Parameter param = element.GetParameters(parameterName).FirstOrDefault();
-                return param.AsString();
+                foreach (Element e in _elementList)
+                {
+                    Parameter param = e.GetParameters(parameterName).FirstOrDefault();
+                    if (param.AsString() != null || param.AsString() != "")
+                    {
+                        return param.AsString();
+                    }
+                }
+
+                return defaultValue;
             }
             else
             {
                 return defaultValue;
             }
+
+
+
+            
         }
 
         private void Ok_Button_Click(object sender, RoutedEventArgs e)
@@ -92,6 +118,8 @@ namespace TimeStamp
             _modelIndice = modelIndice.Text;
             _modelLot = modelLot.Text;
             _modelDate = modelDate.Text;
+            _inView = (bool)elementInview.IsChecked;
+            _overrideValues = (bool)overrideValues.IsChecked;
 
             this.DialogResult = true;
             this.Close();

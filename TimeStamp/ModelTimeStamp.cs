@@ -39,6 +39,12 @@ namespace TimeStamp
                     {
                         tx.Start("Model TimeStamp");
 
+                        //if only on view, edit the element list
+                        if (properties.InView)
+                        {
+                            properties.ElementList = GetElementList(doc, categories,doc.ActiveView);
+                        }
+
                         //Create Shared parameters if necessary
                         AddSharedParameters(app, doc, categories);
 
@@ -106,66 +112,39 @@ namespace TimeStamp
 
         }
 
-        //private List<CustomGroupType> RemoveAllGroup(Document doc)
-        //{
-        //    //Retrive all group types
-        //    FilteredElementCollector collector = new FilteredElementCollector(doc);
-        //    List<GroupType> groupTypes = collector.OfClass(typeof(GroupType)).Cast<GroupType>().ToList();
-        //    List<CustomGroupType> customGroupTypes = new List<CustomGroupType>();
+        private IList<Element> GetElementList(Document doc, CategorySet categories, View activeView)
+        {
+            //Retrive all model elements
+            FilteredElementCollector collector = new FilteredElementCollector(doc,activeView.Id);
+            IList<ElementFilter> categoryFilters = new List<ElementFilter>();
 
-        //    foreach (GroupType groupType in groupTypes)
-        //    {
-        //        if (!groupType.Groups.IsEmpty)
-        //        {
-        //            customGroupTypes.Add(new CustomGroupType(groupType));
-        //        }
+            foreach (Category category in categories)
+            {
+                categoryFilters.Add(new ElementCategoryFilter(category.Id));
+            }
 
-        //    }
+            ElementFilter filter = new LogicalOrFilter(categoryFilters);
 
-        //    return customGroupTypes;
-        //}
+            return collector.WherePasses(filter).WhereElementIsNotElementType().ToElements();
+
+        }
 
         private void ApplyValuesOnElements(PrepareModelInterface properties, Document doc)
         {
-            ////Remove all groups
-            //List<CustomGroupType> customGroupTypes = RemoveAllGroup(doc);
-
             //Add the value to all element
             if (properties.ElementList.Count > 0)
             {
                 foreach (Element e in properties.ElementList)
                 {
-                    WriteOnParam("BIM42_Date", e, properties.Modeldate);
-                    WriteOnParam("BIM42_Version", e, properties.ModelIndice);
-                    WriteOnParam("BIM42_File", e, properties.ModelName);
-                    WriteOnParam("BIM42_Discipline", e, properties.ModelLot);
+                    WriteOnParam("BIM42_Date", e, properties.Modeldate, properties.OverrideValues);
+                    WriteOnParam("BIM42_Version", e, properties.ModelIndice, properties.OverrideValues);
+                    WriteOnParam("BIM42_File", e, properties.ModelName, properties.OverrideValues);
+                    WriteOnParam("BIM42_Discipline", e, properties.ModelLot, properties.OverrideValues);
                 }
             }
-
-            ////Recreate groups
-            //foreach (CustomGroupType customGroupType in customGroupTypes)
-            //{
-            //    //Delete the previous group type
-            //    doc.Delete(customGroupType.GroupType.Id);
-
-            //    //Create a new group with the same name
-            //    Group grpNew = doc.Create.NewGroup(customGroupType.ElementIds.FirstOrDefault());
-            //    grpNew.GroupType.Name = customGroupType.Name;
-
-            //    //Create all other group, and apply the newly created group
-            //    List<List<ElementId>> tempIdList = customGroupType.ElementIds;
-            //    tempIdList.RemoveAt(0);
-            //    foreach (List<ElementId> elementIds in tempIdList)
-            //    {
-            //        Group grpTemps = doc.Create.NewGroup(elementIds);
-            //        GroupType tempType = grpTemps.GroupType;
-            //        grpTemps.ChangeTypeId(grpNew.GroupType.Id);
-            //        doc.Delete(tempType.Id);
-            //    }
-            //}
         }
 
-        private void WriteOnParam(string paramId, Element e, string value)
+        private void WriteOnParam(string paramId, Element e, string value, bool overrideValues)
         {
             IList<Parameter> parameters = e.GetParameters(paramId);
             if (parameters.Count != 0)
@@ -173,7 +152,18 @@ namespace TimeStamp
                 Parameter p = parameters.FirstOrDefault();
                 if (!p.IsReadOnly)
                 {
-                    p.Set(value);
+                    if (overrideValues)
+                    {
+                        p.Set(value);
+                    }
+                    else
+                    {
+                        string paramValue = p.AsString();
+                        if (String.IsNullOrEmpty(paramValue))
+                        {
+                            p.Set(value);
+                        }
+                    }
                 }
             }
         }
@@ -254,10 +244,11 @@ namespace TimeStamp
         {
             CategorySet myCategorySet = app.Create.NewCategorySet();
             Categories categories = doc.Settings.Categories;
+            Category materialCat = categories.get_Item(BuiltInCategory.OST_Materials);
 
             foreach (Category c in categories)
             {
-                if (c.AllowsBoundParameters && c.CategoryType == CategoryType.Model)
+                if (c.AllowsBoundParameters && c.CategoryType == CategoryType.Model && c != materialCat)
                 {
                     myCategorySet.Insert(c);
                 }
@@ -268,25 +259,6 @@ namespace TimeStamp
 
 
     }
-
-    //class CustomGroupType
-    //{
-    //    public GroupType GroupType { get; set; }
-    //    public string Name { get; set; }
-    //    public List<List<ElementId>> ElementIds { get; set; }
-
-    //    public CustomGroupType(GroupType groupType)
-    //    {
-    //        Name = groupType.Name;
-    //        GroupType = groupType;
-    //        ElementIds = new List<List<ElementId>>();
-
-    //        foreach (Group group in groupType.Groups)
-    //        {
-    //            ElementIds.Add(group.UngroupMembers().ToList());
-    //        }
-    //    }
-    //}
 }
 
 

@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d"
-             d:DesignHeight="190" d:DesignWidth="300"
-        Height="190" Width="300" Title="TimeStamp">
+             mc:Ignorable="d" d:DesignWidth="300"
+        Height="280" Width="300" Title="TimeStamp">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Height" Value="23"/>
@@ -16,30 +15,48 @@
             <Setter Property="Height" Value="23"/>
             <Setter Property="Margin" Value="0,0,6,0" />
         </Style>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="Height" Value="18"/>
+        </Style>
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Height" Value="18"/>
+        </Style>
     </Window.Resources>
     <Grid>
-        <Grid Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Label Grid.Column="0" Grid.Row="0" Content="Model Name:"/>
-            <TextBox Grid.Column="1" Grid.Row="0"  Name="modelName"/>
-            <Label Grid.Column="0" Grid.Row="1" Content="Model Date:"/>
-            <TextBox Grid.Column="1" Grid.Row="1" Name="modelDate"/>
-            <Label Grid.Column="0" Grid.Row="2" Content="Model Version:"/>
-            <TextBox Grid.Column="1" Grid.Row="2" Name="modelIndice"/>
-            <Label Grid.Column="0" Grid.Row="3" Content="Model Discipline:"/>
-            <TextBox Grid.Column="1" Grid.Row="3" Name="modelLot"/>
-        </Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="10">
+                <StackPanel Grid.Column="0" Grid.Row="0">
+                    <RadioButton GroupName="view" Name="allElements" Content="All objects in model" IsChecked="True"/>
+                    <RadioButton GroupName="view" Name="elementInview" Content="Only objects in current view"/>
+                </StackPanel>
+            </Grid>
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="1" Content="Model Name:"/>
+                <TextBox Grid.Column="1" Grid.Row="1"  Name="modelName"/>
+                <Label Grid.Column="0" Grid.Row="2" Content="Model Date:"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Name="modelDate"/>
+                <Label Grid.Column="0" Grid.Row="3" Content="Model Version:"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Name="modelIndice"/>
+                <Label Grid.Column="0" Grid.Row="4" Content="Model Discipline:"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Name="modelLot"/>
+            </Grid>
+            <Grid Margin="10">
+                <CheckBox Name="overrideValues" Content="Override existing values"/>
+            </Grid>
+        </StackPanel>
         <Grid Margin="10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Button Content="OK" IsDefault="True" Name="Ok_Button" Click="Ok_Button_Click"/>
