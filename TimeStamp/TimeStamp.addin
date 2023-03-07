@@ -2,7 +2,7 @@
 <RevitAddIns>
   <AddIn Type="Application">
     <Name>Time Stamper</Name>
-    <Assembly>TimeStamp.dll</Assembly>
+    <Assembly>TimeStamp\TimeStamp.dll</Assembly>
     <FullClassName>TimeStamp.App</FullClassName>
     <ClientId>1c629330-3b31-46ff-b510-d0d2639e3a1f</ClientId>
     <VendorId>BIM42</VendorId>

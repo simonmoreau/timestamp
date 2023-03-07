@@ -1,20 +1,50 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeStamp", "TimeStamp.csproj", "{A90E2697-9AD8-4861-897E-A07359B19D09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		2019Debug|Any CPU = 2019Debug|Any CPU
+		2019Release|Any CPU = 2019Release|Any CPU
+		2020Debug|Any CPU = 2020Debug|Any CPU
+		2020Release|Any CPU = 2020Release|Any CPU
+		2021Debug|Any CPU = 2021Debug|Any CPU
+		2021Release|Any CPU = 2021Release|Any CPU
+		2022Debug|Any CPU = 2022Debug|Any CPU
+		2022Release|Any CPU = 2022Release|Any CPU
+		2023Debug|Any CPU = 2023Debug|Any CPU
+		2023Release|Any CPU = 2023Release|Any CPU
+		2024Debug|Any CPU = 2024Debug|Any CPU
+		2024Release|Any CPU = 2024Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A90E2697-9AD8-4861-897E-A07359B19D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A90E2697-9AD8-4861-897E-A07359B19D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A90E2697-9AD8-4861-897E-A07359B19D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A90E2697-9AD8-4861-897E-A07359B19D09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2019Debug|Any CPU.ActiveCfg = 2019Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2019Debug|Any CPU.Build.0 = 2019Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2019Release|Any CPU.ActiveCfg = 2019Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2019Release|Any CPU.Build.0 = 2019Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2020Debug|Any CPU.ActiveCfg = 2020Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2020Debug|Any CPU.Build.0 = 2020Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2020Release|Any CPU.ActiveCfg = 2020Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2020Release|Any CPU.Build.0 = 2020Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2021Debug|Any CPU.ActiveCfg = 2021Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2021Debug|Any CPU.Build.0 = 2021Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2021Release|Any CPU.ActiveCfg = 2021Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2021Release|Any CPU.Build.0 = 2021Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2022Debug|Any CPU.ActiveCfg = 2022Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2022Debug|Any CPU.Build.0 = 2022Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2022Release|Any CPU.ActiveCfg = 2022Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2022Release|Any CPU.Build.0 = 2022Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2023Debug|Any CPU.ActiveCfg = 2023Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2023Debug|Any CPU.Build.0 = 2023Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2023Release|Any CPU.ActiveCfg = 2023Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2023Release|Any CPU.Build.0 = 2023Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2024Debug|Any CPU.ActiveCfg = 2024Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2024Debug|Any CPU.Build.0 = 2024Debug|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2024Release|Any CPU.ActiveCfg = 2024Release|Any CPU
+		{A90E2697-9AD8-4861-897E-A07359B19D09}.2024Release|Any CPU.Build.0 = 2024Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
